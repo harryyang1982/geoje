@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggthemes)
 
 geoje <- read_rds("datasets/geoje_region.RDS") %>% 
   mutate(region_in = factor(region_in),
@@ -48,14 +49,16 @@ net_in_out %>%
   geom_line() +
   geom_point() +
   geom_hline(yintercept = 0) + coord_flip() +
-  labs(title = "여성", subtitle = "20대 여성의 유출")
+  labs(title = "여성", subtitle = "20대 여성의 유출(거제시 전출 전체)")
 
 net_in_out %>% 
   filter(gender == "여성") %>% 
   ggplot(aes(year, net_in_out, fill = ageg)) +
   geom_col(position = "dodge") +
   geom_hline(yintercept = 0) + scale_y_continuous(breaks = seq(-450, 300, by = 50)) +
-  labs(title = "여성", subtitle = "20대 여성의 유출")
+  geom_text(aes(label = net_in_out), position=position_dodge(0.3)) +
+  labs(title = "여성", subtitle = "20대 여성의 유출(거제시 전출 전체)") +
+  theme_economist()
 
 net_in_out %>% 
   filter(gender == "남성") %>% 
@@ -69,8 +72,10 @@ net_in_out %>%
   filter(gender == "남성") %>% 
   ggplot(aes(year, net_in_out, fill = ageg)) +
   geom_col(position = "dodge") +
+  geom_text(aes(label = net_in_out), position=position_dodge(0.3)) +
   geom_hline(yintercept = 0) + scale_y_continuous(breaks = seq(-450, 1500, by = 50)) +
-  labs(title = "남성", subtitle = "취업으로 젊은 남성이 유입", x = "연도", y = "순증감")
+  labs(title = "남성", subtitle = "취업으로 젊은 남성이 유입", x = "연도", y = "순증감") +
+  theme_economist()
 
 ggplot(net_total) +
   geom_line(aes(year, total.x, group = 1), color = "blue") + geom_point(aes(year, total.x, group = 1), color = "blue") +
@@ -99,7 +104,9 @@ net_in_out2 %>%
   ggplot(aes(year, net_in_out, fill = ageg)) +
   geom_col(position = "dodge") +
   geom_hline(yintercept = 0) + scale_y_continuous(breaks = seq(-450, 300, by = 50)) +
-  labs(title = "여성", subtitle = "20대 여성의 유출")
+  geom_text(aes(label = net_in_out), position=position_dodge(0.3)) +
+  labs(title = "여성", subtitle = "20대 여성의 유출(경남도 외로 전출)") +
+  theme_economist()
 
 # 경남 내 전출
 
@@ -117,8 +124,10 @@ net_in_out3 %>%
   filter(gender == "여성") %>% 
   ggplot(aes(year, net_in_out, fill = ageg)) +
   geom_col(position = "dodge") +
-  geom_hline(yintercept = 0) + scale_y_continuous(breaks = seq(-450, 300, by = 50), limits = c(-400, 150)) +
-  labs(title = "여성", subtitle = "20대 여성의 유출")
+  geom_hline(yintercept = 0) + scale_y_continuous(breaks = seq(-150, 300, by = 50), limits = c(-150, 150)) +
+  geom_text(aes(label = net_in_out), position=position_dodge(0.5), angle = 45, hjust = 0.5) +
+  labs(title = "여성", subtitle = "20대 여성의 유출 (경남도 내 전출)") +
+  theme_economist()
 
 # 어디로 가는가
 
@@ -133,9 +142,11 @@ where_out %>%
   top_n(20) %>% 
   ggplot() +
   geom_col(aes(x = reorder(region_city, count), y = count, fill = ageg), position = "dodge") +
+  geom_text(aes(x = reorder(region_city, count), y = count, label = count), position=position_dodge(0.3)) +
   coord_flip() +
   scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)) +
-  labs(title = "20대 여성이 전출입하는 시군구", x = "시군구", y = "인원수")
+  labs(title = "20대 여성이 전출입하는 시군구", x = "시군구", y = "인원수") +
+  theme_economist()
 
 ?top_n
 

@@ -24,6 +24,7 @@ non_paid %>%
   filter(구분 == '경남') %>% 
   ggplot() +
   geom_line(aes(`월(Monthly)`, 호, group =1 )) +
+  geom_text(aes(`월(Monthly)`, 호, label=호), axis = 45) +
   labs(title = "거제 미분양 아파트 현황", subtitle = "준공후 미분양 현황 2010~2018",
        xlab = "연도/월", ylab = "호수") +
   scale_x_date(date_breaks = "1 year") +

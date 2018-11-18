@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggthemes)
 
 outsource_rate <- tribble(~year, ~engineer, ~manufacturer, ~officer, ~outsource,
 1990, 7967, 34701, 4062, 7360,
@@ -23,6 +24,7 @@ outsource_rate %>%
   gather(position, population, engineer:outsource) %>% 
   ggplot() +
   geom_line(aes(year, population, color = position)) +
+  geom_text(aes(x=year, y=population, label = population), angle=45) +
   labs(title = "조선업 사내하청의 증가(1990~2006)", y = "명수", x = "연도")
 
 write_csv(outsource_rate, "datasets/비율.csv")
@@ -31,6 +33,7 @@ outsource_rate %>%
   mutate(rate = outsource / manufacturer) %>% 
   ggplot() + geom_point(aes(year, rate), color = "red", size = 1) +
   geom_line(aes(year, rate), color = "red") +
+  geom_text(aes(x=year, y=rate, label=round(rate * 100, 1)), angle = 45) +
   geom_hline(yintercept = 1) +
   scale_y_continuous(limits = c(0, 2)) +
   labs(title = "조선업 사내하청의 증가", subtitle = "하청의 비율(원청 대비)")
@@ -89,6 +92,7 @@ y2002_2016 %>%
   ggplot(aes(연도, rate)) +
   geom_point(color = "red") + geom_line(color = "red") +
   geom_hline(yintercept = 1) +
+  geom_text(aes(label = round(rate * 100, 1)), vjust = 0.3) +
   scale_y_continuous(limits = c(0, 5)) +
   labs(title = "조선업 사내하청의 증가", subtitle = "하청의 비율(원청 대비)")
 
@@ -98,7 +102,7 @@ y2002_2016 %>%
   summarise(사무직=sum(사무직), 기술직=sum(기술직), 직영_생산직=sum(직영_생산직), 협력사_생산직=sum(협력사_생산직)) %>% 
   gather(분류별, population, 사무직:협력사_생산직) %>% 
   ggplot(aes(연도, population)) +
-  geom_line(aes(color = 분류별)) +
+  geom_line(aes(color = 분류별)) + geom_text(aes(label=population)) +
   labs(title = "조선업 사내하청의 증가(2002~2016)", y = "명수", x = "연도") +
   scale_x_continuous(breaks = c(seq(2002, 2016, 2))) +
   scale_y_continuous(breaks = c(seq(5000, 150000, 5000)), labels = scales::comma)
